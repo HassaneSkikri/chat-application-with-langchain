@@ -1,40 +1,45 @@
-# Local Multimodal AI Chat - Multimodal chat application with local models
-# Copyright (C) 2024 Leon Sander
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, version 3.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
-
+# load all the necessary libraries
+#____________________________________ Step 1 _____________________________________________________
+# stramlit for the web app interface 
 import streamlit as st
-from llm_chains import load_normal_chain, load_pdf_chat_chain
+
+# llm_chains for the language model chains 
+# load_normal_chain and are the functions that load the language model chains
+from llm_chains import load_normal_chain
+
+# mic_recorder is a function that records the audio from the user
 from streamlit_mic_recorder import mic_recorder
+
+# get_timestamp, load_config, get_avatar are functions that are used to get the timestamp, load the configuration file, and get the avatar of the user
 from utils import get_timestamp, load_config, get_avatar
+
+# handle_image is a function that handles the image that the user uploads
 from image_handler import handle_image
+
+# transcribe_audio is a function that transcribes the audio that the user uploads
 from audio_handler import transcribe_audio
-from pdf_handler import add_documents_to_db
+
+
+# css is the css code that is used to style the chat messages
 from html_templates import css
+
+# load_last_k_text_messages, save_text_message, save_image_message, save_audio_message, load_messages, get_all_chat_history_ids, delete_chat_history are functions that are used to load the last k text messages, save the text messages, save the image messages, save the audio messages, load the messages, get all the chat history ids, and delete the chat history
 from database_operations import load_last_k_text_messages, save_text_message, save_image_message, save_audio_message, load_messages, get_all_chat_history_ids, delete_chat_history
+
+# sqlite3 is used to connect to the database
 import sqlite3
+
+# load_config is used to load the configuration file
 config = load_config()
 
+# _______________________________________Step 2____________________________________________________
+# create the helpers functions
+
+# load_chain is a function that loads the language model chain
+# and st.cache_resource is a decorator that caches the resource
 @st.cache_resource
 def load_chain():
-    if st.session_state.pdf_chat:
-        print("loading pdf chat chain")
-        return load_pdf_chat_chain()
     return load_normal_chain()
-
-def toggle_pdf_chat():
-    st.session_state.pdf_chat = True
-    clear_cache()
 
 def get_session_key():
     if st.session_state.session_key == "new_session":
@@ -50,8 +55,11 @@ def clear_cache():
     st.cache_resource.clear()
 
 def main():
-    st.title("Multimodal Local Chat App")
+
+    # the title of our website
+    st.title("Hassane Voiceboot 👆")
     st.write(css, unsafe_allow_html=True)
+
     
     if "db_conn" not in st.session_state:
         st.session_state.session_key = "new_session"
@@ -59,7 +67,6 @@ def main():
         st.session_state.session_index_tracker = "new_session"
         st.session_state.db_conn = sqlite3.connect(config["chat_sessions_database_path"], check_same_thread=False)
         st.session_state.audio_uploader_key = 0
-        st.session_state.pdf_uploader_key = 1
     if st.session_state.session_key == "new_session" and st.session_state.new_session_key != None:
         st.session_state.session_index_tracker = st.session_state.new_session_key
         st.session_state.new_session_key = None
@@ -78,18 +85,14 @@ def main():
     clear_cache_col.button("Clear Cache", on_click=clear_cache)
     
     chat_container = st.container()
-    user_input = st.chat_input("Type your message here", key="user_input")
+
+    # here the user will enter his mmessages
+    user_input = st.chat_input("Type your message here 👆", key="user_input") 
     
     
     uploaded_audio = st.sidebar.file_uploader("Upload an audio file", type=["wav", "mp3", "ogg"], key=st.session_state.audio_uploader_key)
     uploaded_image = st.sidebar.file_uploader("Upload an image file", type=["jpg", "jpeg", "png"])
-    uploaded_pdf = st.sidebar.file_uploader("Upload a pdf file", accept_multiple_files=True, 
-                                            key=st.session_state.pdf_uploader_key, type=["pdf"], on_change=toggle_pdf_chat)
 
-    if uploaded_pdf:
-        with st.spinner("Processing pdf..."):
-            add_documents_to_db(uploaded_pdf)
-            st.session_state.pdf_uploader_key += 2
 
     if uploaded_audio:
         transcribed_audio = transcribe_audio(uploaded_audio.getvalue())
@@ -144,6 +147,7 @@ def main():
 
         if (st.session_state.session_key == "new_session") and (st.session_state.new_session_key != None):
             st.rerun()
+    # applay the setup_ui 
 
 if __name__ == "__main__":
     main()
