@@ -3,6 +3,9 @@
 
 Throut this project. You'll see how different pieces like Whisper AI for audio, LLaVA for image processing  and also PDF's come together in a chat application.
 
+
+![image](https://github.com/HassaneSkikri/chat-application-with-langchain/assets/141918886/cc909ae8-9f22-4b91-af11-9aefe26aa678)
+
 ## Features
 
 - **Quantized Model Integration**: This app uses what are called "quantized models." These are special because they are designed to work well on regular consumer hardware, like the kind most of us have at home or in our offices. Normally, the original versions of these models are really big and need more powerful computers to run them. But quantized models are optimized to be smaller and more efficient, without losing much performance. This means you can use this app and its features without needing a super powerful computer. [Quantized Models from TheBloke](https://huggingface.co/TheBloke)
