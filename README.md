@@ -4,7 +4,8 @@
 Throut this project. You'll see how different pieces like Whisper AI for audio, LLaVA for image processing  and also PDF's come together in a chat application.
 
 
-![image](https://github.com/HassaneSkikri/chat-application-with-langchain/assets/141918886/cc909ae8-9f22-4b91-af11-9aefe26aa678)
+![image](https://github.com/HassaneSkikri/chat-application-with-langchain/assets/141918886/783e4f1b-4ade-42d9-a342-4d1abf006cc1)
+
 
 ## Features
 
